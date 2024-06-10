@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    gateway:
+      mvc:
+        routes:
+        - id: services-user
+          uri: lb://services-user
+          predicates:
+            - Path=/**
+          filters:
+            - StripPrefix=0
