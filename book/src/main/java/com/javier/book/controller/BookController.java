@@ -55,7 +55,7 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             throw new NoFoundException("P-404",bindingResult.getFieldError().getDefaultMessage().toString());
         }
-        bookEntity.setPort(Integer.parseInt(env.getProperty("local.server.port")));
+        
         BookEntity book = bookServiceImpl.updateBook(bookEntity, id)
                 .orElseThrow(()->new NoFoundException("P-404", "book with id not found"));
 

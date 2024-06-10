@@ -2,6 +2,7 @@ package com.javier.book.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.javier.book.entity.BookEntity;
@@ -19,6 +20,9 @@ public class BookServiceImpl implements BookService {
     @Autowired
     @Qualifier("bookRepository")
     private BookRepository bookRepository;
+    
+    @Autowired
+	private Environment env;
 
     @Override
     public Optional<BookEntity> getIdBook(Integer idBook) {
@@ -50,12 +54,14 @@ public class BookServiceImpl implements BookService {
         existingBook.setIsbn(book.getIsbn());
 
         // Return the updated book entity wrapped in an Optional
+        existingBook.setPort(Integer.parseInt(env.getProperty("local.server.port")));
         return Optional.of(bookRepository.save(existingBook));
     }
 
     @Override
     public Boolean deleteBook(Integer idBook) {
         return getIdBook(idBook).map(bookEntity -> {
+        	bookEntity.setPort(Integer.parseInt(env.getProperty("local.server.port")));
             bookRepository.deleteByIdBook(idBook);
             return true;
         }).orElse(false);
